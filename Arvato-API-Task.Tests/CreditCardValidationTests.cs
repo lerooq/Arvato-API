@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Arvato_API_Task.Models;
 using Arvato_API_Task.Models.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

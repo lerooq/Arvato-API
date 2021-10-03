@@ -1,14 +1,12 @@
 ﻿using Arvato_API_Task.Models.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Arvato_API_Task.Models
 {
     // https://www.freebinchecker.com/credit-card-validator/
-    // https://www.creditcard-validnumber.com/
-    // https://www.validcreditcardnumber.com/
+    // https://medium.com/hootsuite-engineering/a-comprehensive-guide-to-validating-and-formatting-credit-cards-b9fa63ec7863#c33a
 
     public class CreditCardValidation : ICreditCardValidation
     {
