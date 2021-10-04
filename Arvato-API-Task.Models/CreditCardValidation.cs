@@ -95,6 +95,7 @@ namespace Arvato_API_Task.Models
             if (string.IsNullOrEmpty(cvvValue))
                 return false;
 
+            // CVV only contains numbers
             Regex reg = new Regex(@"^[0-9]+$");
             if (!reg.IsMatch(cvvValue))
                 return false;
@@ -102,7 +103,7 @@ namespace Arvato_API_Task.Models
             int cvvDigitCount = cvvValue.Length;
             int expectedDigitCount = lengthsCVV[cardType];
 
-            if (cvvDigitCount < expectedDigitCount || cvvDigitCount > expectedDigitCount)
+            if (cvvDigitCount != expectedDigitCount)
                 return false;
 
             return true;

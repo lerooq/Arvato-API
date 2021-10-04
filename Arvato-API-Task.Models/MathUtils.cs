@@ -19,7 +19,6 @@ namespace Arvato_API_Task.Models
         public static long NthDigitLong(long value, int digitPlace)
         {
             if (digitPlace < 0) throw new ArgumentException();
-            //if (value < 0) throw new ArgumentException();
             if (value < 0)
                 value = Math.Abs(value);
 

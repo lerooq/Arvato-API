@@ -58,7 +58,7 @@ namespace Arvato_API_Task.Controllers
 
             List<string> errors = new List<string>();
 
-            if(!_ccValidator.ValidateExpirationDate(creditCardInfo.ExpirationDate))
+            if (!_ccValidator.ValidateExpirationDate(creditCardInfo.ExpirationDate))
                 errors.Add("Card is expired");
 
             if (!_ccValidator.ValidateName(creditCardInfo.Owner))
@@ -88,8 +88,5 @@ namespace Arvato_API_Task.Controllers
                     return BadRequest("Unknown or unsupported card type");
             }
         }
-
-
-
     }
 }
