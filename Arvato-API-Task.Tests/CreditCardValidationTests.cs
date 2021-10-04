@@ -93,6 +93,25 @@ namespace Arvato_API_Task.Tests
 
 
         [TestMethod]
+        public void ValidateNumber_AmericanExpress_TooLongTooShort_Fails()
+        {
+            var ccList = new long[]
+            {
+                34191256202764333, 34290665
+            };
+
+            CreditCardValidation ccv = new CreditCardValidation();
+
+            var results = ccList.Select(cc => ccv.ValidateNumber(cc));
+
+            foreach (var result in results)
+            {
+                Assert.IsFalse(result.Item1);
+            }
+        }
+
+
+        [TestMethod]
         public void ValidateNumber_ShortNumber_Fails()
         {
             long ccNumber = 4372_4948_1923;

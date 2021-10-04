@@ -47,7 +47,7 @@ namespace Arvato_API_Task.Models
         // 1-6: Issuer Identification Number (IIN)
         // 7-15: Account Number
         // 16: checksum
-        public (bool, CCSystem) ValidateNumber(long ccNumber)
+        public (bool result, CCSystem system) ValidateNumber(long ccNumber)
         {
             if (ccNumber <= 0)
                 return (false, CCSystem.UNKNOWN);
@@ -55,6 +55,7 @@ namespace Arvato_API_Task.Models
             // Card length check
             int digitCount = MathUtils.GetDigitCount(ccNumber);
 
+            // No credit card types with <15 or >16 digits
             if (digitCount < 15 || digitCount > 16)
                 return (false, CCSystem.UNKNOWN);
 
