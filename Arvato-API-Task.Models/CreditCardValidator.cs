@@ -8,7 +8,7 @@ namespace Arvato_API_Task.Models
 {
     public class CreditCardValidator
     {
-        public CCSystem Result;
+        public CCSystem Result { get; private set; }
         public List<EValidationErrors> ValidationErrors => _errors;
         public bool HasErrors => _errors.Count > 0;
         private List<EValidationErrors> _errors = new List<EValidationErrors>();
