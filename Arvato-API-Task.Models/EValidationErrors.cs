@@ -1,4 +1,4 @@
-﻿namespace Arvato_API_Task
+﻿namespace Arvato_API_Task.Models
 {
     public enum EValidationErrors
     {

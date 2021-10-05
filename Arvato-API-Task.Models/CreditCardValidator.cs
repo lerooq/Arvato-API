@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Arvato_API_Task
+namespace Arvato_API_Task.Models
 {
     public class CreditCardValidator
     {
