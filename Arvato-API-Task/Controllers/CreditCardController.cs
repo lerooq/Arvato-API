@@ -17,13 +17,6 @@ namespace Arvato_API_Task.Controllers
             _ccValidator = ccValidator;
         }
 
-        // GET: api/<CreditCardController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "hello", "world" };
-        }
-
         // POST api/<CreditCardController>
         [HttpPost]
         public IActionResult Post([FromBody] CreditCard creditCardInfo)

@@ -68,7 +68,7 @@ namespace Arvato_API_Task.Tests
         }
 
         [TestMethod]
-        public void Post_Valid_Returns_Ok_With_CardType()
+        public void Post_Valid_Visa_Returns_Ok_With_CardType()
         {
             var cc = new CreditCard()
             {
@@ -91,6 +91,58 @@ namespace Arvato_API_Task.Tests
 
             string resultMessage = (res as OkObjectResult).Value as string;
             Assert.IsTrue(resultMessage.Equals("Visa"));
+        }
+
+        [TestMethod]
+        public void Post_Valid_MasterCard_Returns_Ok_With_CardType()
+        {
+            var cc = new CreditCard()
+            {
+                CVV = "027",
+                Owner = "Emil",
+                ExpirationDate = new DateTime(2030, 3, 4),
+                Number = 1234_4567
+            };
+
+            var validation = new Mock<ICreditCardValidationHelper>();
+            validation.Setup(re => re.ValidateCVV(cc.CVV, CCSystem.MASTER_CARD)).Returns(true);
+            validation.Setup(re => re.ValidateExpirationDate(cc.ExpirationDate)).Returns(true);
+            validation.Setup(re => re.ValidateName(cc.Owner)).Returns(true);
+            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns(CCSystem.MASTER_CARD);
+
+            var controller = new CreditCardController(validation.Object);
+
+            var res = controller.Post(cc);
+            Assert.IsInstanceOfType(res, typeof(OkObjectResult));
+
+            string resultMessage = (res as OkObjectResult).Value as string;
+            Assert.IsTrue(resultMessage.Equals("Master Card"));
+        }
+
+        [TestMethod]
+        public void Post_Valid_AmericanExpress_Returns_Ok_With_CardType()
+        {
+            var cc = new CreditCard()
+            {
+                CVV = "027",
+                Owner = "Emil",
+                ExpirationDate = new DateTime(2030, 3, 4),
+                Number = 1234_4567
+            };
+
+            var validation = new Mock<ICreditCardValidationHelper>();
+            validation.Setup(re => re.ValidateCVV(cc.CVV, CCSystem.AMERICAN_EXPRESS)).Returns(true);
+            validation.Setup(re => re.ValidateExpirationDate(cc.ExpirationDate)).Returns(true);
+            validation.Setup(re => re.ValidateName(cc.Owner)).Returns(true);
+            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns(CCSystem.AMERICAN_EXPRESS);
+
+            var controller = new CreditCardController(validation.Object);
+
+            var res = controller.Post(cc);
+            Assert.IsInstanceOfType(res, typeof(OkObjectResult));
+
+            string resultMessage = (res as OkObjectResult).Value as string;
+            Assert.IsTrue(resultMessage.Equals("American Express"));
         }
     }
 }

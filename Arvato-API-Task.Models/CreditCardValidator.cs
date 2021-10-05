@@ -17,6 +17,8 @@ namespace Arvato_API_Task.Models
         {
             Result = CCSystem.UNKNOWN;
 
+            /// Null-checks & empty stings
+
             if (creditCardInfo == null)
             {
                 _errors.Add(EValidationErrors.MissingCCInfoBody);
@@ -37,6 +39,8 @@ namespace Arvato_API_Task.Models
 
             if (HasErrors)
                 return;
+
+            /// Validation checks
 
             if (!ccValidator.ValidateExpirationDate(creditCardInfo.ExpirationDate))
                 _errors.Add(EValidationErrors.CardExpired);
