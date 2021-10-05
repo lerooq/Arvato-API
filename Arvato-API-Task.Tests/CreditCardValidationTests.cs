@@ -20,14 +20,13 @@ namespace Arvato_API_Task.Tests
                 -4485089979925703, 4532493273012637, 000000010
             };
 
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
             var results = ccList.Select(cc => ccv.ValidateNumber(cc));
 
             foreach (var result in results)
             {
-                Assert.IsFalse(result.Item1);
-                Assert.IsTrue(result.Item2 == CCSystem.UNKNOWN);
+                Assert.IsTrue(result == CCSystem.UNKNOWN);
             }
         }
 
@@ -40,14 +39,13 @@ namespace Arvato_API_Task.Tests
                 4929240306217870, 4532493273012639, 4929647639220019
             };
 
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
             var results = ccList.Select(cc => ccv.ValidateNumber(cc));
 
             foreach (var result in results)
             {
-                Assert.IsTrue(result.Item1);
-                Assert.IsTrue(result.Item2 == CCSystem.VISA);
+                Assert.IsTrue(result == CCSystem.VISA);
             }
         }
 
@@ -60,14 +58,13 @@ namespace Arvato_API_Task.Tests
                 5111274718022904, 5498312771524771, 5549177062364446
             };
 
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
             var results = ccList.Select(cc => ccv.ValidateNumber(cc));
 
             foreach (var result in results)
             {
-                Assert.IsTrue(result.Item1);
-                Assert.IsTrue(result.Item2 == CCSystem.MASTER_CARD);
+                Assert.IsTrue(result == CCSystem.MASTER_CARD);
             }
         }
 
@@ -80,14 +77,13 @@ namespace Arvato_API_Task.Tests
                 345617871770199, 379593948617680, 377778089862144
             };
 
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
             var results = ccList.Select(cc => ccv.ValidateNumber(cc));
 
             foreach (var result in results)
             {
-                Assert.IsTrue(result.Item1);
-                Assert.IsTrue(result.Item2 == CCSystem.AMERICAN_EXPRESS);
+                Assert.IsTrue(result == CCSystem.AMERICAN_EXPRESS);
             }
         }
 
@@ -100,13 +96,13 @@ namespace Arvato_API_Task.Tests
                 34191256202764333, 34290665
             };
 
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
             var results = ccList.Select(cc => ccv.ValidateNumber(cc));
 
             foreach (var result in results)
             {
-                Assert.IsFalse(result.Item1);
+                Assert.IsTrue(result == CCSystem.UNKNOWN);
             }
         }
 
@@ -115,23 +111,23 @@ namespace Arvato_API_Task.Tests
         public void ValidateNumber_ShortNumber_Fails()
         {
             long ccNumber = 4372_4948_1923;
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
-            bool result = ccv.ValidateNumber(ccNumber).Item1;
+            bool result = ccv.ValidateNumber(ccNumber) == CCSystem.UNKNOWN;
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void ValidateNumber_BogusNumbers_Fails()
         {
             var ccNumbers = new long[] { 0, -1 };
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
 
-            var results = ccNumbers.Select(num => ccv.ValidateNumber(num).Item1);
+            var results = ccNumbers.Select(num => ccv.ValidateNumber(num) == CCSystem.UNKNOWN);
 
             foreach (var result in results)
-                Assert.IsFalse(result);
+                Assert.IsTrue(result);
         }
 
         #endregion
@@ -142,7 +138,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_BadInput_Fails()
         {
             var cvvs = new string[] { "!#04", "1ø3" };
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var results = cvvs.Select(cvv => ccv.ValidateCVV(cvv, CCSystem.AMERICAN_EXPRESS));
 
@@ -153,7 +149,7 @@ namespace Arvato_API_Task.Tests
         [TestMethod]
         public void ValidateCVV_NullEmpty_Fails()
         {
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result1 = ccv.ValidateCVV(null, CCSystem.AMERICAN_EXPRESS);
             var result2 = ccv.ValidateCVV("", CCSystem.AMERICAN_EXPRESS);
@@ -166,7 +162,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_AmericanExpress_ValidCVV_Passes()
         {
             var cvv = "0415";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.AMERICAN_EXPRESS);
 
@@ -177,7 +173,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_AmericanExpress_VisaCVV_Fails()
         {
             var cvv = "041";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.AMERICAN_EXPRESS);
 
@@ -188,7 +184,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_VISA_MC_ValidCVV_Passes()
         {
             var cvv = "041";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.VISA);
 
@@ -199,7 +195,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_AMERICAN_EXPRESES_TooManyDigits_Fail()
         {
             var cvv = "544555";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.AMERICAN_EXPRESS);
 
@@ -210,7 +206,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_VISA_MC_TooManyDigits_Fail()
         {
             var cvv = "5445";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.VISA);
 
@@ -221,7 +217,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_TooFewDigits_Fail()
         {
             var cvv = "54";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.VISA);
 
@@ -232,7 +228,7 @@ namespace Arvato_API_Task.Tests
         public void ValidateCVV_NegativeNum_Fails()
         {
             var cvv = "-1";
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateCVV(cvv, CCSystem.VISA);
 
@@ -250,7 +246,7 @@ namespace Arvato_API_Task.Tests
             var cardDate = new DateTime(2017, 01, 21);
             var presentDate = new DateTime(2018, 01, 21);
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateExpirationDate(cardDate, presentDate);
             Assert.IsFalse(result);
@@ -262,7 +258,7 @@ namespace Arvato_API_Task.Tests
             var cardDate = new DateTime(2020, 01, 21);
             var presentDate = new DateTime(2018, 01, 21);
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var result = ccv.ValidateExpirationDate(cardDate, presentDate);
             Assert.IsTrue(result);
@@ -276,7 +272,7 @@ namespace Arvato_API_Task.Tests
         {
             string[] names = { "Emil Rysgaard", "Emil Ernst Rysgaard" };
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var results = names.Select(name => ccv.ValidateName(name));
 
@@ -289,7 +285,7 @@ namespace Arvato_API_Task.Tests
         {
             string name = "L'Carl-Emil Ernst Düsseldorph";
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             bool res = ccv.ValidateName(name);
             Assert.IsTrue(res);
@@ -298,14 +294,14 @@ namespace Arvato_API_Task.Tests
         [TestMethod]
         public void ValidateName_Null_Fails()
         {
-            CreditCardValidation ccv = new CreditCardValidation();
+            CreditCardValidationHelper ccv = new CreditCardValidationHelper();
             Assert.IsFalse(ccv.ValidateName(null));
         }
 
         [TestMethod]
         public void ValidateName_EmptyString_Fails()
         {
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
             Assert.IsFalse(ccv.ValidateName(""));
         }
 
@@ -314,7 +310,7 @@ namespace Arvato_API_Task.Tests
         {
             string[] names = { "4573203984732918", "4573203984732918Emil Rysgaard 043", "4573203984732918Emil Rysgaard 043" };
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var results = names.Select(name => ccv.ValidateName(name));
 
@@ -327,7 +323,7 @@ namespace Arvato_API_Task.Tests
         {
             string[] names = { "Emil Rysgaard 027", "027 Emil Rysgaard " };
 
-            var ccv = new CreditCardValidation();
+            var ccv = new CreditCardValidationHelper();
 
             var results = names.Select(name => ccv.ValidateName(name));
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Numerics;
 
-namespace Arvato_API_Task.Models
+namespace Arvato_API_Task.Models.Helpers
 {
     public static class MathUtils
     {
@@ -52,13 +52,13 @@ namespace Arvato_API_Task.Models
 
                     if (n > 9)
                     {
-                        n = (n % 10) + 1;
+                        n = n % 10 + 1;
                     }
                 }
                 sum += n;
                 alternate = !alternate;
             }
-            return (sum % 10 == 0);
+            return sum % 10 == 0;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Arvato_API_Task.Tests
                 Number = 1234_4567
             };
 
-            var validation = new Mock<ICreditCardValidation>();
+            var validation = new Mock<ICreditCardValidationHelper>();
             var controller = new CreditCardController(validation.Object);
 
             var result = (BadRequestObjectResult)controller.Post(cc);
@@ -38,7 +38,7 @@ namespace Arvato_API_Task.Tests
         {
             var cc = new CreditCard() { };
 
-            var validation = new Mock<ICreditCardValidation>();
+            var validation = new Mock<ICreditCardValidationHelper>();
             var controller = new CreditCardController(validation.Object);
 
             var result = (BadRequestObjectResult)controller.Post(cc);
@@ -59,11 +59,11 @@ namespace Arvato_API_Task.Tests
                 Number = 1234_4567
             };
 
-            var validation = new Mock<ICreditCardValidation>();
+            var validation = new Mock<ICreditCardValidationHelper>();
             validation.Setup(re => re.ValidateCVV(cc.CVV, CCSystem.VISA)).Returns(false);
             validation.Setup(re => re.ValidateExpirationDate(cc.ExpirationDate)).Returns(false);
             validation.Setup(re => re.ValidateName(cc.Owner)).Returns(true);
-            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns((true, CCSystem.VISA));
+            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns(CCSystem.VISA);
 
             var controller = new CreditCardController(validation.Object);
 
@@ -85,11 +85,11 @@ namespace Arvato_API_Task.Tests
                 Number = 1234_4567
             };
 
-            var validation = new Mock<ICreditCardValidation>();
+            var validation = new Mock<ICreditCardValidationHelper>();
             validation.Setup(re => re.ValidateCVV(cc.CVV, CCSystem.VISA)).Returns(true);
             validation.Setup(re => re.ValidateExpirationDate(cc.ExpirationDate)).Returns(true);
             validation.Setup(re => re.ValidateName(cc.Owner)).Returns(true);
-            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns((true, CCSystem.VISA));
+            validation.Setup(re => re.ValidateNumber(cc.Number)).Returns(CCSystem.VISA);
 
             var controller = new CreditCardController(validation.Object);
 

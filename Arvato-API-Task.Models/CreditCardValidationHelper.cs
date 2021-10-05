@@ -1,4 +1,5 @@
 ﻿using Arvato_API_Task.Models.Entities;
+using Arvato_API_Task.Models.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -8,7 +9,7 @@ namespace Arvato_API_Task.Models
     // https://www.freebinchecker.com/credit-card-validator/
     // https://medium.com/hootsuite-engineering/a-comprehensive-guide-to-validating-and-formatting-credit-cards-b9fa63ec7863#c33a
 
-    public class CreditCardValidation : ICreditCardValidation
+    public class CreditCardValidationHelper : ICreditCardValidationHelper
     {
         private Dictionary<CCSystem, int> lengthsCVV = new Dictionary<CCSystem, int>
         {
@@ -24,7 +25,7 @@ namespace Arvato_API_Task.Models
             { CCSystem.AMERICAN_EXPRESS, 15 }
         };
 
-        public CreditCardValidation() { }
+        public CreditCardValidationHelper() { }
 
 
         private static CCSystem GetCCSystemByIIN(long IIN)
@@ -47,47 +48,47 @@ namespace Arvato_API_Task.Models
         // 1-6: Issuer Identification Number (IIN)
         // 7-15: Account Number
         // 16: checksum
-        public (bool result, CCSystem system) ValidateNumber(long ccNumber)
+        public CCSystem ValidateNumber(long ccNumber)
         {
             if (ccNumber <= 0)
-                return (false, CCSystem.UNKNOWN);
+                return CCSystem.UNKNOWN;
 
             // Card length check
             int digitCount = MathUtils.GetDigitCount(ccNumber);
 
             // No credit card types with <15 or >16 digits
             if (digitCount < 15 || digitCount > 16)
-                return (false, CCSystem.UNKNOWN);
+                return CCSystem.UNKNOWN;
 
             // Luhn
             if (!MathUtils.LuhnCheck(ccNumber.ToString()))
-                return (false, CCSystem.UNKNOWN);
+                return CCSystem.UNKNOWN;
 
             // Major Industry Identifier Check
             // First digit of card
             long industryDigit = MathUtils.NthDigitLong(ccNumber, digitCount - 1);
             CCSystem cardSystemType = GetCCSystemByIIN(industryDigit);
             if (cardSystemType == CCSystem.UNKNOWN)
-                return (false, CCSystem.UNKNOWN);
+                return CCSystem.UNKNOWN;
 
             // American express should have a digit count of 15
             // Visa/MasterCard should have digit count of 16
             switch (cardSystemType)
             {
                 case CCSystem.UNKNOWN:
-                    return (false, CCSystem.UNKNOWN);
+                    return CCSystem.UNKNOWN;
                 case CCSystem.VISA:
                 case CCSystem.MASTER_CARD:
                     if (digitCount < 16)
-                        return (false, CCSystem.UNKNOWN);
+                        return CCSystem.UNKNOWN;
                     break;
                 case CCSystem.AMERICAN_EXPRESS:
                     if (digitCount > 15)
-                        return (false, CCSystem.UNKNOWN);
+                        return CCSystem.UNKNOWN;
                     break;
             }
 
-            return (true, cardSystemType);
+            return cardSystemType;
         }
 
         public bool ValidateCVV(string cvvValue, CCSystem cardType)
@@ -116,9 +117,6 @@ namespace Arvato_API_Task.Models
 
         public bool ValidateExpirationDate(DateTime expDate, DateTime nowDate)
         {
-            if (expDate == null || nowDate == null)
-                throw new ArgumentNullException();
-
             return nowDate < expDate;
         }
 

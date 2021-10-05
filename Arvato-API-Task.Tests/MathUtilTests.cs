@@ -1,4 +1,4 @@
-﻿using Arvato_API_Task.Models;
+﻿using Arvato_API_Task.Models.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

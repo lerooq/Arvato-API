@@ -26,7 +26,7 @@ namespace Arvato_API_Task
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped<ICreditCardValidation, CreditCardValidation>();
+            services.AddScoped<ICreditCardValidationHelper, CreditCardValidationHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

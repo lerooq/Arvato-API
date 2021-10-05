@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Arvato_API_Task.Models
+namespace Arvato_API_Task.Models.Helpers
 {
     public static class Extensions
     {
@@ -15,7 +15,7 @@ namespace Arvato_API_Task.Models
                 if (string.IsNullOrEmpty(word))
                     continue;
                 sb.Append(word);
-                if(index < arr.Count-1) sb.Append(delimeter);
+                if (index < arr.Count - 1) sb.Append(delimeter);
 
                 index++;
             }
