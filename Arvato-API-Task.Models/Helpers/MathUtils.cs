@@ -6,11 +6,6 @@ namespace Arvato_API_Task.Models.Helpers
 {
     public static class MathUtils
     {
-        public static int GetDigitCount(int value)
-        {
-            return (int)Math.Floor(Math.Log10(Math.Abs(value)) + 1);
-        }
-
         public static int GetDigitCount(long value)
         {
             return (int)Math.Floor(BigInteger.Log10(BigInteger.Abs(value)) + 1);
