@@ -10,27 +10,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace Arvato_API_Task.Tests
 {
     [TestClass]
-    public class CreditCardControllerTests
+    public class CreditCardApiControllerTests
     {
         [TestMethod]
-        public void Post_Missing_Owner_Fails_HasMessage()
+        public void Post_NullBody_BadRequest_Fails()
         {
-            var cc = new CreditCard()
-            {
-                CVV = "027",
-                Owner = null,
-                ExpirationDate = new DateTime(2030, 3, 4),
-                Number = 1234_4567
-            };
-
             var validation = new Mock<ICreditCardValidationHelper>();
             var controller = new CreditCardController(validation.Object);
 
-            var result = (BadRequestObjectResult)controller.Post(cc);
-            var resultMessage = (string)result.Value;
+            var result = controller.Post(null);
 
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-            Assert.IsTrue(resultMessage.Equals("Owner name is missing"));
+
+            var message = (result as BadRequestObjectResult).Value as string;
+            Assert.IsFalse(string.IsNullOrEmpty(message));
         }
 
         [TestMethod]
@@ -93,11 +86,11 @@ namespace Arvato_API_Task.Tests
 
             var controller = new CreditCardController(validation.Object);
 
-            var res = controller.Post(cc) as OkObjectResult;
-            var resultMessage = res.Value as string;
-
+            var res = controller.Post(cc);
             Assert.IsInstanceOfType(res, typeof(OkObjectResult));
-            Assert.IsTrue(res.Value.Equals("Visa"));
+
+            string resultMessage = (res as OkObjectResult).Value as string;
+            Assert.IsTrue(resultMessage.Equals("Visa"));
         }
     }
 }

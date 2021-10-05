@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Arvato_API_Task.Tests
 {
     [TestClass]
-    public class CreditCardValidationTests
+    public class CreditCardValidationHelperTests
     {
         #region ValidateNumber_Tests
 

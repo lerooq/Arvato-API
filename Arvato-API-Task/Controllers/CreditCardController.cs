@@ -24,14 +24,11 @@ namespace Arvato_API_Task.Controllers
             return new string[] { "hello", "world" };
         }
 
-
-
         // POST api/<CreditCardController>
         [HttpPost]
         public IActionResult Post([FromBody] CreditCard creditCardInfo)
         {
             var validator = new CreditCardValidator(creditCardInfo, _ccValidator);
-
 
             if (validator.HasErrors)
                 return BadRequest(validator.ResultAsString);

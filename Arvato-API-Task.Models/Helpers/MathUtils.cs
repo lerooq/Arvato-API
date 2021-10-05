@@ -41,11 +41,10 @@ namespace Arvato_API_Task.Models.Helpers
         {
             int sum = 0;
             bool alternate = false;
+            char[] nx = ccNumber.ToArray();
             for (int i = ccNumber.Length - 1; i >= 0; i--)
             {
-                char[] nx = ccNumber.ToArray();
                 int n = int.Parse(nx[i].ToString());
-
                 if (alternate)
                 {
                     n *= 2;
