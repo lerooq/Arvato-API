@@ -65,7 +65,7 @@ namespace Arvato_API_Task.Models
             get
             {
                 if (HasErrors)
-                    return string.Join('\n', _errors.Select(e => ErrorStrings[e]));
+                    return string.Join('\n', _errors.Select(e => GetErrorStringByEnum(e)));
 
                 switch (Result)
                 {
@@ -81,17 +81,32 @@ namespace Arvato_API_Task.Models
             }
         }
 
-        private static Dictionary<EValidationErrors, string> ErrorStrings = new Dictionary<EValidationErrors, string>() {
-            {EValidationErrors.MissingCCInfoBody, "Credit card info missing from body of request" },
-            {EValidationErrors.MissingCVV, "CVV is missing"},
-            {EValidationErrors.MissingExpirationDate, "Expiration date is invalid or missing" },
-            {EValidationErrors.MissingCCNumber, "Number is missing or invalid" },
-            {EValidationErrors.MissingOwnerName,  "Owner name is missing"},
-            {EValidationErrors.CardExpired,  "Card is expired"},
-            {EValidationErrors.OwnerNameInvalid,  "Owner name is invalid"},
-            {EValidationErrors.CardNumberInvalid,  "Card number is invalid"},
-            {EValidationErrors.CVVInvalid,  "CVV is invalid or doesn't fit card type"}
-        };
+        public string GetErrorStringByEnum(EValidationErrors valErrorEnum)
+        {
+            switch (valErrorEnum)
+            {
+                case EValidationErrors.MissingCCInfoBody:
+                    return "Credit card info missing from body of request";
+                case EValidationErrors.MissingCVV:
+                    return "CVV is missing";
+                case EValidationErrors.MissingExpirationDate:
+                    return "Expiration date is invalid or missing";
+                case EValidationErrors.MissingCCNumber:
+                    return "Number is missing or invalid";
+                case EValidationErrors.MissingOwnerName:
+                    return "Owner name is missing";
+                case EValidationErrors.CardExpired:
+                    return "Card is expired";
+                case EValidationErrors.OwnerNameInvalid:
+                    return "Owner name is invalid";
+                case EValidationErrors.CardNumberInvalid:
+                    return "Card number is invalid";
+                case EValidationErrors.CVVInvalid:
+                    return "CVV is invalid or doesn't fit card type";
+                default:
+                    return "Unknown error";
+            }
+        }
     }
 
 

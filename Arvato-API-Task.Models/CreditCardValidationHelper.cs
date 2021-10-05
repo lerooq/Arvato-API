@@ -11,6 +11,9 @@ namespace Arvato_API_Task.Models
 
     public class CreditCardValidationHelper : ICreditCardValidationHelper
     {
+        public static readonly Regex REGEX_OWNER_NAME = new Regex(@"^[a-zA-Z \-æøåäöü']+$");
+        public static readonly Regex REGEX_CVV = new Regex(@"^[0-9]+$");
+
         public CreditCardValidationHelper() { }
 
 
@@ -97,8 +100,8 @@ namespace Arvato_API_Task.Models
                 return false;
 
             // CVV only contains numbers
-            Regex reg = new Regex(Constants.REGEX_CVV);
-            if (!reg.IsMatch(cvvValue))
+            
+            if (!REGEX_CVV.IsMatch(cvvValue))
                 return false;
 
             int cvvDigitCount = cvvValue.Length;
@@ -124,9 +127,7 @@ namespace Arvato_API_Task.Models
         {
             if (string.IsNullOrEmpty(name))
                 return false;
-
-            Regex reg = new Regex(Constants.REGEX_OWNER_NAME);
-            return reg.IsMatch(name);
+            return REGEX_OWNER_NAME.IsMatch(name);
         }
     }
 }
