@@ -11,22 +11,22 @@ namespace Arvato_API_Task.Models
 
     public class CreditCardValidationHelper : ICreditCardValidationHelper
     {
-        private Dictionary<CCSystem, int> lengthsCVV = new Dictionary<CCSystem, int>
-        {
-            { CCSystem.VISA, 3 },
-            { CCSystem.MASTER_CARD, 3 },
-            { CCSystem.AMERICAN_EXPRESS, 4 }
-        };
-
-        private Dictionary<CCSystem, int> lengthsCCNumber = new Dictionary<CCSystem, int>
-        {
-            { CCSystem.VISA, 16 },
-            { CCSystem.MASTER_CARD, 16 },
-            { CCSystem.AMERICAN_EXPRESS, 15 }
-        };
-
         public CreditCardValidationHelper() { }
 
+
+        private static int GetCVVLengthByCCSystem(CCSystem system)
+        {
+            switch (system)
+            {
+                case CCSystem.VISA:
+                case CCSystem.MASTER_CARD:
+                    return 3;
+                case CCSystem.AMERICAN_EXPRESS:
+                    return 4;
+                default:
+                    return -1;
+            }
+        }
 
         private static CCSystem GetCCSystemByIIN(long IIN)
         {
@@ -97,14 +97,14 @@ namespace Arvato_API_Task.Models
                 return false;
 
             // CVV only contains numbers
-            Regex reg = new Regex(@"^[0-9]+$");
+            Regex reg = new Regex(Constants.REGEX_CVV);
             if (!reg.IsMatch(cvvValue))
                 return false;
 
             int cvvDigitCount = cvvValue.Length;
-            int expectedDigitCount = lengthsCVV[cardType];
+            int expectedCvvDigitCount = GetCVVLengthByCCSystem(cardType);
 
-            if (cvvDigitCount != expectedDigitCount)
+            if (cvvDigitCount != expectedCvvDigitCount)
                 return false;
 
             return true;
@@ -125,8 +125,7 @@ namespace Arvato_API_Task.Models
             if (string.IsNullOrEmpty(name))
                 return false;
 
-            Regex reg = new Regex(@"^[a-zA-Z \-æøåäöü']+$");
-
+            Regex reg = new Regex(Constants.REGEX_OWNER_NAME);
             return reg.IsMatch(name);
         }
     }
